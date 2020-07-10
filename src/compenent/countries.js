@@ -7,13 +7,17 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-const useStyles = makeStyles({
-    table: {
-        minWidth: 650,
+const useStyles = makeStyles((theme) => ({
+    root: {
+      margin:  'auto',
+      
     },
-    
-});
+    table:{
+        minWidth:650
+    }
+  }));
 
 
 export default function Countries() {
@@ -29,11 +33,15 @@ export default function Countries() {
             setGlobaldata(Object.values(data.countryitems[0]))
             setLoading()
         }
-        fetchapi();
+        fetchapi()
     }, [globaldata])
     return (
         <TableContainer component={Paper}>
-            {loading ? <div className={classes.loader}><h1>Loading...</h1></div> : <Table className={classes.table} size="small" aria-label="a dense table">
+            {loading ? 
+            <div className={classes.root}>
+                <CircularProgress color="secondary" />
+            </div> : 
+            <Table className={classes.table} size="small" aria-label="a dense table">
                 <TableHead className={classes.header}>
                     <TableRow>
                         {Object.keys(globaldata[0]).map((key,ind)=>{
