@@ -20,11 +20,11 @@ export default function CenteredGrid() {
     const [globaldata, setGlobaldata] = useState([]);
     useEffect(() => {
         async function fetchapi() {
-            const api = await fetch('https://api.thevirustracker.com/free-api?global=stats')
+            // const api = await fetch('https://api.thevirustracker.com/free-api?global=stats')
+            const api = await fetch('https://disease.sh/v3/covid-19/all')
             const data = await api.json();
-            delete data.results[0].source;
-            //console.log(data.results[0]);
-            setGlobaldata(data.results[0])
+            console.log(data);
+            setGlobaldata(data)
         }
         fetchapi();
     })
@@ -35,7 +35,7 @@ export default function CenteredGrid() {
                     return (
                         <Grid item sm={4} key={ind}>
                             <Paper className={classes.paper}>
-                                <h4>{data.toUpperCase().replace(/_/g, ' ')}</h4>
+                                <h4>{data.toUpperCase()}</h4>
                                 <h3>{globaldata[data]}</h3>
                             </Paper>
                         </Grid>
