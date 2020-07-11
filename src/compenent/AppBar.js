@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -7,6 +7,14 @@ import InputBase from '@material-ui/core/InputBase';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,7 +73,28 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SearchAppBar() {
   const classes = useStyles();
-
+  const [search,setSearch] = useState('pk');
+  const [countrydata,setCountrydata]=useState([])
+  
+  try {
+    useEffect(()=>{
+      fetch(`https://api.thevirustracker.com/free-api?countryTotal=${search}`)
+      .then(response=>response.json())
+      .then(result=>{
+        console.log(result)
+        
+        setCountrydata(result.countrydata[0])
+  
+      })
+    })
+  } catch (error) {
+    console.log(error)
+  }
+  
+  const onSubmit = (e)=>{
+    e.preventDefault()
+    setSearch(search)
+  }
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -85,6 +114,7 @@ export default function SearchAppBar() {
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
+            <form onSubmit={onSubmit}>
             <InputBase
               placeholder="Search…"
               classes={{
@@ -92,10 +122,42 @@ export default function SearchAppBar() {
                 input: classes.inputInput,
               }}
               inputProps={{ 'aria-label': 'search' }}
+              onChange={e=>setSearch(e.target.value)}
             />
+            </form>
           </div>
         </Toolbar>
       </AppBar>
+      
+      <TableContainer component={Paper}>
+       <Table className={classes.table} aria-label="simple table">
+         <TableHead>
+            <TableRow>
+             <TableCell>Total Active Cases</TableCell>
+             <TableCell>Total Cases</TableCell>
+             <TableCell>Total Danger Rank</TableCell>
+             <TableCell>Total Deaths</TableCell>
+             <TableCell>Total New Cases Today</TableCell>
+             <TableCell>Total New Death Today</TableCell>
+             <TableCell>Total Recovered</TableCell>
+             <TableCell>Total Serious Cases</TableCell>
+           </TableRow>
+         </TableHead>
+         <TableBody>
+           
+         <TableRow align="center">
+             <TableCell>{countrydata.total_active_cases}</TableCell>
+             <TableCell>{countrydata.total_cases}</TableCell>
+            <TableCell>{countrydata.total_danger_rank}</TableCell>
+            <TableCell>{countrydata.total_deaths}</TableCell>
+            <TableCell>{countrydata.total_new_cases_today}</TableCell>
+            <TableCell>{countrydata.total_new_deaths_today}</TableCell>
+            <TableCell>{countrydata.total_recovered}</TableCell>
+            <TableCell>{countrydata.total_serious_cases}</TableCell>
+             </TableRow>
+         </TableBody>
+       </Table>
+     </TableContainer>       
     </div>
   );
 }

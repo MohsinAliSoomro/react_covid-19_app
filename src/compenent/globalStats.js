@@ -23,7 +23,7 @@ export default function CenteredGrid() {
             const api = await fetch('https://api.thevirustracker.com/free-api?global=stats')
             const data = await api.json();
             delete data.results[0].source;
-            console.log(data.results[0]);
+            //console.log(data.results[0]);
             setGlobaldata(data.results[0])
         }
         fetchapi();
