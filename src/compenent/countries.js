@@ -26,11 +26,10 @@ export default function Countries() {
     const [loading,setLoading]=useState(true)
     useEffect(() => {
         async function fetchapi() {
-            const api = await fetch('https://api.thevirustracker.com/free-api?countryTotals=ALL')
-            const data = await api.json();
-            delete data.countryitems[0]["source"];
-            //console.log(Object.values(data.countryitems[0])[0].title);
-            setGlobaldata(Object.values(data.countryitems[0]))
+            const api = await fetch('https://disease.sh/v3/covid-19/countries')
+            const data = await api.json()
+            console.log(data)
+            setGlobaldata(data)
             setLoading()
         }
         fetchapi()
@@ -44,29 +43,26 @@ export default function Countries() {
             <Table className={classes.table} size="small" aria-label="a dense table">
                 <TableHead className={classes.header}>
                     <TableRow>
-                        {Object.keys(globaldata[0]).map((key,ind)=>{
-                            return(
-                            <TableCell component="th" scope="row">{key.toUpperCase().replace(/_/g, ' ')}</TableCell>
-                            )
-                    })}
+                        <TableCell component="th" scope="row">Country</TableCell>
+                        <TableCell component="th" scope="row">Active</TableCell>
+                        <TableCell component="th" scope="row">Deaths</TableCell>
+                        <TableCell component="th" scope="row">Recovered</TableCell>
+                        <TableCell component="th" scope="row">Case today</TableCell>
+                        <TableCell component="th" scope="row">Death today</TableCell>
+                        <TableCell component="th" scope="row">Recovered today</TableCell>   
                     </TableRow>
                 </TableHead>
                 <TableBody>
                 
                     {globaldata.map((key, ind) => (
                         <TableRow key={ind}>
-                            <TableCell>{Object.values(key)[0]}</TableCell>
-                            <TableCell>{Object.values(key)[1]}</TableCell>
-                            <TableCell>{Object.values(key)[2]}</TableCell>
-                            <TableCell>{Object.values(key)[3]}</TableCell>
-                            <TableCell>{Object.values(key)[4]}</TableCell>
-                            <TableCell>{Object.values(key)[5]}</TableCell>
-                            <TableCell>{Object.values(key)[6]}</TableCell>
-                            <TableCell>{Object.values(key)[7]}</TableCell>
-                            <TableCell>{Object.values(key)[8]}</TableCell>
-                            <TableCell>{Object.values(key)[9]}</TableCell>
-                            <TableCell>{Object.values(key)[10]}</TableCell>
-                            <TableCell>{Object.values(key)[11]}</TableCell>
+                            <TableCell><img width="25" src={key.countryInfo.flag} alt="flag"/> {key.country}</TableCell>
+                            <TableCell>{key.active}</TableCell>
+                            <TableCell>{key.deaths}</TableCell>
+                            <TableCell>{key.recovered}</TableCell>
+                            <TableCell>{key.todayCases}</TableCell>
+                            <TableCell>{key.todayDeaths}</TableCell>
+                            <TableCell>{key.todayRecovered}</TableCell>
                         </TableRow>
                     ))}
                     

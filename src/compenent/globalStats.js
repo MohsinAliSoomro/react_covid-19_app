@@ -20,30 +20,39 @@ export default function CenteredGrid() {
     const [globaldata, setGlobaldata] = useState([]);
     useEffect(() => {
         async function fetchapi() {
-            // const api = await fetch('https://api.thevirustracker.com/free-api?global=stats')
             const api = await fetch('https://disease.sh/v3/covid-19/all')
             const data = await api.json();
-            console.log(data);
             setGlobaldata(data)
         }
         fetchapi();
     })
     return (
         <div className={classes.root}>
-            <Grid container spacing={3}>
-                {Object.keys(globaldata).map((data, ind) => {
-                    return (
-                        <Grid item sm={4} key={ind}>
-                            <Paper className={classes.paper}>
-                                <h4>{data.toUpperCase()}</h4>
-                                <h3>{globaldata[data]}</h3>
-                            </Paper>
-                        </Grid>
-                    );
-
-                })}
-
-
+            <Grid container spacing={1}>
+                <Grid item sm={3} >
+                    <Paper className={classes.paper}>
+                        <h5>Cases</h5>
+                        <h5>{globaldata.cases}</h5>
+                    </Paper>
+                </Grid>
+                <Grid item sm={3} >
+                    <Paper className={classes.paper}>
+                        <h5>Active Cases</h5>
+                        <h5>{globaldata.active}</h5>
+                    </Paper>
+                </Grid>
+                <Grid item sm={3} >
+                    <Paper className={classes.paper}>
+                        <h5>Deaths</h5>
+                        <h5>{globaldata.deaths}</h5>
+                    </Paper>
+                </Grid>
+                <Grid item sm={3} >
+                    <Paper className={classes.paper}>
+                        <h5>Recovered</h5>
+                        <h5>{globaldata.recovered}</h5>
+                    </Paper>
+                </Grid>
             </Grid>
         </div>
     );

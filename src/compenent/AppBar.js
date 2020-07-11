@@ -73,28 +73,25 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SearchAppBar() {
   const classes = useStyles();
-  const [search,setSearch] = useState('pk');
+  const [search,setSearch] = useState('pakistan');
   const [countrydata,setCountrydata]=useState([])
   
   try {
     useEffect(()=>{
-      fetch(`https://api.thevirustracker.com/free-api?countryTotal=${search}`)
+      async function fetchapi(){
+       await fetch(`https://disease.sh/v3/covid-19/countries/${search}`)
       .then(response=>response.json())
       .then(result=>{
-        console.log(result)
-        
-        setCountrydata(result.countrydata[0])
-  
+        setCountrydata(result)
       })
+      }
+      fetchapi() 
     })
   } catch (error) {
     console.log(error)
   }
   
-  const onSubmit = (e)=>{
-    e.preventDefault()
-    setSearch(search)
-  }
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -114,7 +111,7 @@ export default function SearchAppBar() {
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
-            <form onSubmit={onSubmit}>
+            
             <InputBase
               placeholder="Search…"
               classes={{
@@ -124,7 +121,7 @@ export default function SearchAppBar() {
               inputProps={{ 'aria-label': 'search' }}
               onChange={e=>setSearch(e.target.value)}
             />
-            </form>
+            
           </div>
         </Toolbar>
       </AppBar>
@@ -133,27 +130,29 @@ export default function SearchAppBar() {
        <Table className={classes.table} aria-label="simple table">
          <TableHead>
             <TableRow>
-             <TableCell>Total Active Cases</TableCell>
+              <TableCell>Country</TableCell>
+             <TableCell>Active Cases</TableCell>
              <TableCell>Total Cases</TableCell>
-             <TableCell>Total Danger Rank</TableCell>
-             <TableCell>Total Deaths</TableCell>
-             <TableCell>Total New Cases Today</TableCell>
-             <TableCell>Total New Death Today</TableCell>
-             <TableCell>Total Recovered</TableCell>
-             <TableCell>Total Serious Cases</TableCell>
+             <TableCell>Deaths</TableCell>
+             <TableCell>Recovered</TableCell>
+             <TableCell>Case today</TableCell>
+             <TableCell>Deaths today</TableCell>
+             <TableCell>Recovered today</TableCell>
+             <TableCell>Critical</TableCell>
            </TableRow>
          </TableHead>
          <TableBody>
            
          <TableRow align="center">
-             <TableCell>{countrydata.total_active_cases}</TableCell>
-             <TableCell>{countrydata.total_cases}</TableCell>
-            <TableCell>{countrydata.total_danger_rank}</TableCell>
-            <TableCell>{countrydata.total_deaths}</TableCell>
-            <TableCell>{countrydata.total_new_cases_today}</TableCell>
-            <TableCell>{countrydata.total_new_deaths_today}</TableCell>
-            <TableCell>{countrydata.total_recovered}</TableCell>
-            <TableCell>{countrydata.total_serious_cases}</TableCell>
+             <TableCell>{countrydata.country}</TableCell>
+             <TableCell>{countrydata.active}</TableCell>
+             <TableCell>{countrydata.cases}</TableCell>
+             <TableCell>{countrydata.deaths}</TableCell>
+             <TableCell>{countrydata.recovered}</TableCell>
+             <TableCell>{countrydata.todayCases}</TableCell>
+             <TableCell>{countrydata.todayDeaths}</TableCell>
+             <TableCell>{countrydata.todayRecovered}</TableCell>
+            <TableCell>{countrydata.critical}</TableCell>
              </TableRow>
          </TableBody>
        </Table>
