@@ -1,5 +1,5 @@
 ### `Deploy link`
-http://githubrepos.surge.sh/
+http://covid-19-cases-tracker.surge.sh/
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
