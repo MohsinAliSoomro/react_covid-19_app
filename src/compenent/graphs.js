@@ -1,36 +1,48 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useEffect,useState } from 'react';
+import {Pie} from 'react-chartjs-2';
 
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-        marginTop: 10
-    },
-    paper: {
-        padding: theme.spacing(4),
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
-    },
-}));
-
-export default function Countries() {
-    const classes = useStyles();
+export default function Graph(){
+    const [globaldata, setGlobaldata] = useState([]);
+    useEffect(() => {
+        async function fetchapi() {
+            await fetch('https://disease.sh/v3/covid-19/all')
+            .then(res=>res.json())
+            .then(result=> {
+                setGlobaldata(result)
+            })
+            .catch(err=>{
+                console.log(err)
+            })
+        }
+        fetchapi();
+    })
     
-    // useEffect(() => {
-    //     async function fetchapi() {
-    //         const api = await fetch('https://api.thevirustracker.com/free-api?countryTotals=ALL')
-    //         const data = await api.json();
-    //         console.log(data);
-    //         setGlobaldata(data)
-            
-    //     }
-    //     fetchapi();
-    // })
+    const data = {
+        labels: [
+            'Cases',
+            'Recovered',
+            'Deaths'
+        ],
+        datasets: [{
+            data: [globaldata.cases, globaldata.recovered, globaldata.deaths],
+            backgroundColor: [
+            '#FF6384',
+            '#36A2EB',
+            '#FFCE56'
+            ],
+            hoverBackgroundColor: [
+            '#FF6384',
+            '#36A2EB',
+            '#FFCE56'
+            ]
+        }]
+    };
+
+
     return (
-        <div className={classes.root}>
-            <h1>Graphs</h1>
-            
-        </div>
+      <div style={{width:'100%'}}>
+        <h2 style={{textAlign:'center',color:'#123faf'}}>Global Data</h2>
+        <Pie data={data} />
+      </div>
     );
-}
+  }
