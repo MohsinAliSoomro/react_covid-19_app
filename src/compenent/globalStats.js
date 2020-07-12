@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-
+import Googlemap from './googlemap'
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -18,14 +18,23 @@ const useStyles = makeStyles((theme) => ({
 export default function CenteredGrid() {
     const classes = useStyles();
     const [globaldata, setGlobaldata] = useState([]);
+
+    
     useEffect(() => {
         async function fetchapi() {
-            const api = await fetch('https://disease.sh/v3/covid-19/all')
-            const data = await api.json();
-            setGlobaldata(data)
+            await fetch('https://disease.sh/v3/covid-19/all')
+            .then(res=>res.json())
+            .then(result=> {
+                setGlobaldata(result)
+            })
+            .catch(err=>{
+                console.log(err)
+            })
         }
         fetchapi();
     })
+
+    
     return (
         <div className={classes.root}>
             <Grid container spacing={1}>
@@ -54,6 +63,7 @@ export default function CenteredGrid() {
                     </Paper>
                 </Grid>
             </Grid>
+            <Googlemap />
         </div>
     );
 }
